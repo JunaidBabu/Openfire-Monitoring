@@ -24,6 +24,7 @@ public class ArchiveFactory {
 				.getType().toString(), withJid);
 		archivedMessage.setSubject(message.getSubject());
 		archivedMessage.setBody(message.getBody());
+		archivedMessage.setThread(message.getThread());
 
 		return archivedMessage;
 	}

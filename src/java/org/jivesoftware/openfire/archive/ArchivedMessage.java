@@ -36,6 +36,7 @@ public class ArchivedMessage {
     private Date sentDate;
     private String body;
     private boolean roomEvent;
+    private String thread;
 
     /**
      * Creates a new archived message.
@@ -55,6 +56,17 @@ public class ArchivedMessage {
         this.sentDate = sentDate;
         this.body = body;
         this.roomEvent = roomEvent;
+    }
+    
+    public ArchivedMessage(long conversationID, JID fromJID, JID toJID, Date sentDate, String body, boolean roomEvent, String thread) {
+        this.conversationID = conversationID;
+        // Convert both JID's to bare JID's so that we don't store resource information.
+        this.fromJID = fromJID;
+        this.toJID = toJID;
+        this.sentDate = sentDate;
+        this.body = body;
+        this.roomEvent = roomEvent;
+        this.thread = thread;
     }
 
     /**

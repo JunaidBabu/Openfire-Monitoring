@@ -38,6 +38,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import java.lang.reflect.Field;
+
 import org.dom4j.Element;
 import org.jivesoftware.database.DbConnectionManager;
 import org.jivesoftware.openfire.XMPPServer;
@@ -961,6 +963,38 @@ public class ConversationManager implements Startable, ComponentEventListener {
 	/**
 	 * A task that persists conversation meta-data and messages to the database.
 	 */
+	public static String dump(Object object) {
+		         Field[] fields = object.getClass().getDeclaredFields();
+		         StringBuilder sb = new StringBuilder();
+		         sb.append(object.getClass().getSimpleName()).append('{');
+		 
+		         boolean firstRound = true;
+		 
+		         for (Field field : fields) {
+		             if (!firstRound) {
+		                 sb.append(", ");
+		             }
+		             firstRound = false;
+		             field.setAccessible(true);
+		             try {
+		                 final Object fieldObj = field.get(object);
+		                 final String value;
+		                 if (null == fieldObj) {
+		                     value = "null";
+		                 } else {
+		                     value = fieldObj.toString();
+		                 }
+		                 sb.append(field.getName()).append('=').append('\'')
+		                         .append(value).append('\'');
+		             } catch (IllegalAccessException ignore) {
+		                 //this should never happen
+		             }
+		 
+		         }
+		  
+		         sb.append('}');
+		         return sb.toString();
+		     }
 	private class ArchivingTask implements Runnable {
 
 		public void run() {
@@ -984,9 +1018,9 @@ public class ConversationManager implements Startable, ComponentEventListener {
 						pstmt.setString(2, message.getFromJID().toBareJID());
 						pstmt.setString(3, message.getFromJID().getResource());
 						pstmt.setString(4, message.getToJID().toBareJID());
-						pstmt.setString(5, message.getToJID().getResource());
+						pstmt.setString(5, message.getToJID().getResource());				
 						pstmt.setLong(6, message.getSentDate().getTime());
-						pstmt.setString(8, message.getThead());
+						pstmt.setString(8, dump(message));
 						DbConnectionManager.setLargeTextField(pstmt, 7, message.getBody());
 						if (DbConnectionManager.isBatchUpdatesSupported()) {
 							pstmt.addBatch();

@@ -30,6 +30,7 @@ public class ArchivedMessage {
 	private String body;
 	private Conversation conversation;
 	private JID withJid;
+	private String thread;
 
 	public ArchivedMessage(Date time, Direction direction, String type, JID withJid) {
 		this.time = time;
@@ -77,9 +78,15 @@ public class ArchivedMessage {
 	public Conversation getConversation() {
 		return conversation;
 	}
-
+	public String getThread(){
+		return thread;
+	}
+	
 	public void setConversation(Conversation conversation) {
 		this.conversation = conversation;
+	}
+	public void setThread(String thread){
+		this.thread = thread;
 	}
 
 	/**
